@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 
 @Entity(name = "usergroup")
@@ -78,8 +80,8 @@ public class Group implements Serializable {
     @Column(name = "fk_user", insertable = false, updatable = false)
     private Long userId;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "group")
-    private Collection<User> users = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "group")
+    private Set<User> users = new HashSet<>();
 
     public void addUser(User user) {
         users.add(user);

@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "users")
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email", "username"}))
@@ -47,8 +49,8 @@ public class User implements Serializable {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
   private Collection<Group> groups;
 
-  @ManyToMany(cascade = CascadeType.ALL)
-  private Collection<Group> group = new ArrayList<>();
+  @ManyToMany(cascade = CascadeType.PERSIST)
+  private Set<Group> group = new HashSet<>();
 
   @JsonView(Views.Private.class)
   public Long getId() {
@@ -97,6 +99,6 @@ public class User implements Serializable {
   }
 
   public void addGroup(Group group) {
-        groups.add(group);
+        this.group.add(group);
     }
 }

@@ -9,7 +9,6 @@ import org.udg.pds.springtodo.repository.GroupRepository;
 import org.udg.pds.springtodo.repository.UserRepository;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -65,19 +64,16 @@ public class GroupService {
 
     @Transactional
     public void addUserToGroup(Long userIdLog, Long groupId, Collection<Long> users) {
-        Group t = this.getGroup(userIdLog, groupId);
+        Group group = this.getGroup(userIdLog, groupId);
 
-        if (t.getUser().getId() != userIdLog)
+        if (group.getUser().getId() != userIdLog)
             throw new ServiceException("This user is not the owner of the group");
 
         try {
             for (Long userId : users) {
                 User user = userService.getUser(userId);
-                t.addUser(user);
-                user.addGroup(t); //afegir als dos costats, bidereccional
-                userRepository.save(user);
+                group.addUser(user);
             }
-            groupRepository.save(t);
         } catch (Exception ex) {
             // Very important: if you want that an exception reaches the EJB caller, you have to throw an ServiceException
             // We catch the normal exception and then transform it in a ServiceException
