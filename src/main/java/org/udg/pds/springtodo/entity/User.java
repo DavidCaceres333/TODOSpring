@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "users")
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email", "username"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"email", "username","phoneNumber"}))
 public class User implements Serializable {
   /**
    * Default value included to remove warning. Remove or modify at will. *
@@ -23,10 +23,11 @@ public class User implements Serializable {
   public User() {
   }
 
-  public User(String username, String email, String password) {
+  public User(String username, String email, String password, int phoneNumber) {
     this.username = username;
     this.email = email;
     this.password = password;
+    this.phoneNumber = phoneNumber;
     this.tasks = new ArrayList<>();
   }
 
@@ -42,6 +43,12 @@ public class User implements Serializable {
 
   @NotNull
   private String password;
+
+  @NotNull
+  private Integer phoneNumber;
+
+  @NotNull
+  private String description = "Hey! I'm using Avarst";
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
   private Collection<Task> tasks;
@@ -71,10 +78,16 @@ public class User implements Serializable {
     return username;
   }
 
+  @JsonView(Views.Private.class)
+  public int getPhoneNumber() { return phoneNumber;}
+
   @JsonIgnore
   public String getPassword() {
     return password;
   }
+
+  @JsonView(Views.Private.class)
+  public String getDescription() { return description;}
 
   @JsonView(Views.Complete.class)
   public Collection<Task> getTasks() {
@@ -99,6 +112,6 @@ public class User implements Serializable {
   }
 
   public void addGroup(Group group) {
-        this.group.add(group);
+        this.groups.add(group);
     }
 }

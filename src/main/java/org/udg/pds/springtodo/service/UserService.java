@@ -39,7 +39,7 @@ public class UserService {
       throw new ServiceException("Password does not match");
   }
 
-  public User register(String username, String email, String password) {
+  public User register(String username, String email, String password, int phoneNumber) {
 
    List<User> uEmail = userRepository.findByEmail(email);
     if (uEmail.size() > 0)
@@ -50,7 +50,7 @@ public class UserService {
     if (uUsername.size() > 0)
       throw new ServiceException("Username already exists");
 
-    User nu = new User(username, email, password);
+    User nu = new User(username, email, password, phoneNumber);
     userRepository.save(nu);
     return nu;
   }
@@ -70,4 +70,11 @@ public class UserService {
     return u;
   }
 
+    public User getUserEquipment(Long loggedUserId) {
+      //HEM DE BUSCAR ELS EQUIPMENT, SIMILAR A BUSCAR ELS TAG DE LES TASKS
+        User u = this.getUser(loggedUserId);
+        for (Task t : u.getTasks())
+            t.getTags();
+        return u;
+    }
 }

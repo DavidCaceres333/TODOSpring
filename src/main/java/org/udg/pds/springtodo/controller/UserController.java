@@ -70,7 +70,7 @@ public class UserController extends BaseController {
   public String register(HttpSession session, @Valid  @RequestBody RegisterUser ru) {
 
     checkNotLoggedIn(session);
-    userService.register(ru.username, ru.email, ru.password);
+    userService.register(ru.username, ru.email, ru.password, ru.phoneNumber);
     return BaseController.OK_MESSAGE;
 
   }
@@ -83,6 +83,15 @@ public class UserController extends BaseController {
 
     return userService.getUserProfile(loggedUserId);
   }
+
+    @GetMapping(path="/me/equipment")
+    @JsonView(Views.Complete.class)
+    public User getUserEquipment(HttpSession session) {
+    //PER FER, SIMILAR ALS TASKS AMB ELS TAGS
+        Long loggedUserId = getLoggedUser(session);
+
+        return userService.getUserEquipment(loggedUserId);
+    }
 
   @GetMapping(path="/check")
   public String checkLoggedIn(HttpSession session) {
@@ -107,6 +116,8 @@ public class UserController extends BaseController {
     public String email;
     @NotNull
     public String password;
+    @NotNull
+    public int phoneNumber;
   }
 
   static class ID {
